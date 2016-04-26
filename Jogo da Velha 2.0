@@ -1,7 +1,7 @@
 import tkinter as tk
 import numpy as np
 
-#criando a classe jogo
+#criando a classe      jogo
 class Jogo():
     
   def __init__(self):
