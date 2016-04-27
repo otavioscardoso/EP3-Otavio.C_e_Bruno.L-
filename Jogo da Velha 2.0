@@ -1,23 +1,32 @@
+
 import tkinter as tk
 import numpy as np
 
-#criando a classe      jogo
+# Definindo a classe jogo
 class Jogo():
     
   def __init__(self):
-    self.jogadas = ["X","O"," "]
+    self.jogador = ["X","O","-"]
     
-    self.usuario = self.jogadas
-    
-    self.local_das_jogadas = np.zeros([3,3])
+    self.usuario = self.jogador
     
     self.ganhador = "    "
     
+    self.local_das_jogadas = np.zeros([3,3])
+    
+    
+
+# Essa função fará com que o primeiro jogador possa escolher se usará
+# o "X" ou o "O" apartir de um clique em botões criados na outra classe    
   def quem_comeca(self, z):
     if z == 0:
-        self.usuario = self.jogadas[0]
+        self.usuario = self.jogador[0]
     if z == 1:
-        self.usuario = self.jogadas[1]
+        self.usuario = self.jogador[1]
+        
+# Nesta função, a qual chama a verifica_ganhador, recebe a
+# jogada, vê se depois desta jogada o jogador venceu e faz com que 
+# a próxima jogada seja efetuada pelo outro jogador.
   def recebe_jogada(self, x, y):
         verifica = self.verifica_ganhador()
         
@@ -25,265 +34,260 @@ class Jogo():
             
             if self.local_das_jogadas[x][y] == 0:
                 
-                if self.usuario == self.jogadas[0]: 
-                    
-                    self.local_das_jogadas[x][y] = 10
-                    self.usuario = self.jogadas[1]
-                    verifica = self.verifica_ganhador()
-                    
-                elif self.usuario == self.jogadas[1]:
+                if self.usuario == self.jogador[1]:
                     
                     self.local_das_jogadas[x][y] = 100
-                    self.usuario = self.jogadas[0]
+                    self.usuario = self.jogador[0]
                     verifica = self.verifica_ganhador()
-        else:
-            pass  
+                
+                elif self.usuario == self.jogador[0]: 
+                    
+                    self.local_das_jogadas[x][y] = 10
+                    self.usuario = self.jogador[1]
+                    verifica = self.verifica_ganhador()
+                    
+# Nesta função, há a verificação se o "X" ganhou, se o "O" ganhou, se 
+# houve empate ou se o jogo ainda não acabou.
+# No código, colocamos como o "X" sendo vencedor quando a soma da coluna,
+# linha ou diagonal for 30(uma vez que o "X" corresponde a 10 na matriz).
+# O mesmo foi feito no caso do "O", porém com a soma sendo 300("O" corresponde
+# a 100 na matriz). O empate seria carcterizado quando todos os espaços 
+# prenchidos (soma 540 ou 450). O jogo estaria em andamento caso
+# nenhuma das combinações anteriores existisse
   def verifica_ganhador(self):
-
-    soma_x = np.sum(self.local_das_jogadas, 1)
-    soma_y = np.sum(self.local_das_jogadas, 0)
-    
-    if soma_y[0] == 30 or soma_x[0] == 30 or soma_y[1] == 30 or soma_x[1] == 30 or soma_y[2] == 30 or soma_x[2] == 30 or self.local_das_jogadas[0][0] + self.local_das_jogadas[1][1] + self.local_das_jogadas[2][2] == 30 or self.local_das_jogadas[2][0] + self.local_das_jogadas[1][1] + self.local_das_jogadas[0][2] == 30:  
-        
+    if self.local_das_jogadas[0][0] == self.local_das_jogadas[0][1]== self.local_das_jogadas[0][2] == 10\
+    or self.local_das_jogadas[1][0] == self.local_das_jogadas[1][1]== self.local_das_jogadas[1][2] == 10\
+    or self.local_das_jogadas[2][0] == self.local_das_jogadas[2][1]== self.local_das_jogadas[2][2] == 10\
+    or self.local_das_jogadas[0][0] == self.local_das_jogadas[1][0]== self.local_das_jogadas[2][0] == 10\
+    or self.local_das_jogadas[0][1] == self.local_das_jogadas[1][1]== self.local_das_jogadas[2][1] == 10\
+    or self.local_das_jogadas[0][2] == self.local_das_jogadas[1][2]== self.local_das_jogadas[2][2] == 10\
+    or self.local_das_jogadas[0][0] == self.local_das_jogadas[1][1]== self.local_das_jogadas[2][2] == 10\
+    or self.local_das_jogadas[2][0] == self.local_das_jogadas[1][1]== self.local_das_jogadas[0][2] == 10:
         self.ganhador = "X"
-        self.usuario = self.jogadas[2]
+        self.usuario = self.jogador[2]
         return 1    
     
-    elif soma_y[0] == 300 or soma_x[0] == 300 or soma_y[1] == 300 or soma_x[1] == 300 or soma_y[2] == 300 or soma_x[2] == 300 or self.local_das_jogadas[0][0] + self.local_das_jogadas[1][1] + self.local_das_jogadas[2][2] == 300 or self.local_das_jogadas[2][0] + self.local_das_jogadas[1][1] + self.local_das_jogadas[0][2] == 300:
-       
-        self.ganhador="O"
-        self.usuario = self.jogadas[2]
+    if self.local_das_jogadas[0][0] == self.local_das_jogadas[0][1]== self.local_das_jogadas[0][2] == 100\
+    or self.local_das_jogadas[1][0] == self.local_das_jogadas[1][1]== self.local_das_jogadas[1][2] == 100\
+    or self.local_das_jogadas[2][0] == self.local_das_jogadas[2][1]== self.local_das_jogadas[2][2] == 100\
+    or self.local_das_jogadas[0][0] == self.local_das_jogadas[1][0]== self.local_das_jogadas[2][0] == 100\
+    or self.local_das_jogadas[0][1] == self.local_das_jogadas[1][1]== self.local_das_jogadas[2][1] == 100\
+    or self.local_das_jogadas[0][2] == self.local_das_jogadas[1][2]== self.local_das_jogadas[2][2] == 100\
+    or self.local_das_jogadas[0][0] == self.local_das_jogadas[1][1]== self.local_das_jogadas[2][2] == 100\
+    or self.local_das_jogadas[2][0] == self.local_das_jogadas[1][1]== self.local_das_jogadas[0][2] == 100:       
+        self.ganhador = "O"
+        self.usuario = self.jogador[2]
         return 2
-    
+        
     elif np.sum(self.local_das_jogadas) == 540 or np.sum(self.local_das_jogadas) == 450:
        
-        self.ganhador = "Ninguem"
-        self.usuario = self.jogadas[2]
+        self.ganhador = "Ninguém"
+        self.usuario = self.jogador[2]
         return 0
-        
     else:         
         return -1
     
-    
+# Essa função retoma a matriz inicial de zeros    
   def limpa_jogadas(self):
     self.local_das_jogadas = np.zeros([3,3])
-    
+
   def iniciar(self):
     self.window.mainloop()
-
-#criando a classe tabuleiro
+    
 class Tabuleiro():
-
+    
+# Aqui está a definição de todos os botões e labels existente em nosso tabuleiro
     def __init__(self):
         self.jogo = Jogo()
         
         self.window = tk.Tk()
         
-        self.window.title("Jogo da Velha")
+        self.window.title("Jogo da Velha de Bruno e Otavio")
         
-        self.window.geometry("400x600+100+100")
+        self.window.geometry("500x500")
         
-        self.window.columnconfigure(0, minsize=10, weight=1)
-        self.window.columnconfigure(1, minsize=10, weight=1)
-        self.window.columnconfigure(2, minsize=10, weight=1)
-        self.window.columnconfigure(3, minsize=10, weight=1)
-        
-        self.window.rowconfigure(0, minsize=10, weight=1)
-        self.window.rowconfigure(1, minsize=10, weight=1)
-        self.window.rowconfigure(2, minsize=10, weight=1)
-        self.window.rowconfigure(3, minsize=10, weight=1)
+# Configuração das linhas e colunas da janela
+        self.window.rowconfigure(0, minsize=70, weight=1)
+        self.window.columnconfigure(0, minsize=70, weight=1)
+        self.window.rowconfigure(1, minsize=70, weight=1)
+        self.window.columnconfigure(1, minsize=70, weight=1)
+        self.window.rowconfigure(2, minsize=70, weight=1)
+        self.window.columnconfigure(2, minsize=70, weight=1)
+        self.window.rowconfigure(3, minsize=70, weight=1)
         self.window.rowconfigure(4, minsize=10, weight=1)
-        self.window.rowconfigure(5, minsize=10, weight=1)
 
-#criando os botões do tabuleiro
+# Definindo os botões        
         self.botão1 = tk.Button(self.window)
-        self.botão1.grid(row=1, column=0, sticky="nsew")
-        self.botão1.configure(command=self.click_botão1)
-         
         self.botão2 = tk.Button(self.window)
-        self.botão2.grid(row=1, column=1, sticky="nsew")
-        self.botão2.configure(command=self.click_botão2)
-          
         self.botão3 = tk.Button(self.window)
-        self.botão3.grid(row=1, column=2, sticky="nsew")
-        self.botão3.configure(command=self.click_botão3)
-     
         self.botão4 = tk.Button(self.window)
-        self.botão4.grid(row=2, column=0, sticky="nsew")
-        self.botão4.configure(command=self.click_botão4)
-         
         self.botão5 = tk.Button(self.window)
-        self.botão5.grid(row=2, column=1, sticky="nsew")
-        self.botão5.configure(command=self.click_botão5)
-          
         self.botão6 = tk.Button(self.window)
-        self.botão6.grid(row=2, column=2, sticky="nsew")
-        self.botão6.configure(command=self.click_botão6)
-       
         self.botão7 = tk.Button(self.window)
-        self.botão7.grid(row=3, column=0, sticky="nsew")
-        self.botão7.configure(command=self.click_botão7)
-         
         self.botão8 = tk.Button(self.window)
-        self.botão8.grid(row=3, column=1, sticky="nsew")
-        self.botão8.configure(command=self.click_botão8)
-          
         self.botão9 = tk.Button(self.window)
-        self.botão9.grid(row=3, column=2, sticky="nsew")
-        self.botão9.configure(command=self.click_botão9)
-
-#criando os botões para escolher o símbolo    
         self.inicio_X = tk.Button(self.window)
-        self.inicio_X.grid(row=4, column=1, columnspan=1, sticky='nsew')
-        self.inicio_X.configure(text='X', command=self.X_comeca)   
-        
         self.inicio_O = tk.Button(self.window)
-        self.inicio_O.grid(row=4, column=2, columnspan=1, sticky='nsew')
-        self.inicio_O.configure(text='O', command=self.O_comeca)
+        self.reiniciar_jogo = tk.Button(self.window)
 
-        self.label_troca = tk.Label(self.window)
-        self.label_troca.grid(row=0, column=0, columnspan=1, sticky="nsew")
-        self.label_troca.configure(text="Agora é a vez de: {0}" .format(self.jogo.usuario),)
-                
-        self.reiniciar = tk.Button(self.window)
-        self.reiniciar.grid(row=0, column=2,columnspan=1, sticky="nsew")
-        self.reiniciar.configure(text="Reiniciar",command=self.restart)
+# Posição dos botões        
+        self.botão1.grid(row=1, column=0, sticky="nsew")
+        self.botão2.grid(row=1, column=1, sticky="nsew")
+        self.botão3.grid(row=1, column=2, sticky="nsew")
+        self.botão4.grid(row=2, column=0, sticky="nsew")
+        self.botão5.grid(row=2, column=1, sticky="nsew")
+        self.botão6.grid(row=2, column=2, sticky="nsew")
+        self.botão7.grid(row=3, column=0, sticky="nsew")
+        self.botão8.grid(row=3, column=1, sticky="nsew")
+        self.botão9.grid(row=3, column=2, sticky="nsew")
+        self.inicio_X.grid(row=0, column=0, columnspan=1, sticky='nsew')
+        self.inicio_O.grid(row=0, column=2, columnspan=1, sticky='nsew')
+        self.reiniciar_jogo.grid(row=4, column=1,columnspan=1, sticky="nsew")
+
+# O que os botões fazem        
+        self.botão1.configure(command=self.click_botão1) 
+        self.botão2.configure(command=self.click_botão2)
+        self.botão3.configure(command=self.click_botão3)
+        self.botão4.configure(command=self.click_botão4)
+        self.botão5.configure(command=self.click_botão5)
+        self.botão6.configure(command=self.click_botão6)
+        self.botão7.configure(command=self.click_botão7)
+        self.botão8.configure(command=self.click_botão8)
+        self.botão9.configure(command=self.click_botão9)
+        self.inicio_X.configure(text='X', command=self.X_comeca)
+        self.inicio_O.configure(text='O', command=self.O_comeca)
+        self.reiniciar_jogo.configure(text="Reiniciar",command=self.restart, font='Arial 30')
         
-        self.label_ganhador = tk.Label(self.window)
-        self.label_ganhador.grid(row=0, column=1, columnspan=1, sticky="nsew")
-        self.label_ganhador.configure(text="Ganhador: {0}" .format(self.jogo.ganhador))
+# Definição dos labels
+        self.inicio = tk.Label(self.window)
+        self.troca = tk.Label(self.window)
+        self.ganhador = tk.Label(self.window)
+
+# posição dos labels        
+        self.inicio.grid(row=0, column=1, columnspan=1, sticky="nsew")
+        self.troca.grid(row=4, column=0, columnspan=1, sticky="nsew")
+        self.ganhador.grid(row=4, column=2, columnspan=1, sticky="nsew")
         
-    def click(self):
-        self.jogo.usuario
-        
+# O que os labels fica escrito nos labels    
+        self.inicio.configure(text="<-- Defina o símbolo inicial -->", bg='Black', fg='White')
+        if self.jogo.usuario == ["X","O","---"]:
+            self.troca.configure(text=" ", bg='Black', fg='White')
+        else:
+            self.troca.configure(text="Agora é a vez de: {0}" .format(self.jogo.usuario), bg='Black', fg='White')
+       
+        self.ganhador.configure(text="Vencedor: {0}" .format(self.jogo.ganhador), bg='Black', fg='White')
+
+#Tais funções definem quem começa o jogo
     def X_comeca(self):
         self.jogo.quem_comeca(0)
         
     def O_comeca(self):
         self.jogo.quem_comeca(1)
-        
+
+# Essas funções sao associadas à classe jogo. Em cada botão há o recebimento
+# da jogada, a troca de turno, o aparecimento do texto nos botões e 
+# a aparição do vencedor(se houver, no caso)      
     def click_botão1(self):
-        self.click()
-        self.botão1.configure(text=self.jogo.usuario, state= "disabled")
+        self.botão1.configure(text=self.jogo.usuario, state= "disabled", font='Arial, 75')
         self.jogo.recebe_jogada(0,0)
-        self.label_ganhador.configure(text="Ganhador: {0}" .format(self.jogo.ganhador))
-        self.label_troca.configure(text="Agora é a vez de: {0}" .format(self.jogo.usuario))
-        
+        self.ganhador.configure(text=" Vencedor: {0} " .format(self.jogo.ganhador))
+        self.troca.configure(text="Agora é a vez de: {0}" .format(self.jogo.usuario))
         
     def click_botão2(self):
-        self.click()
-        self.botão2.configure(text=self.jogo.usuario, state= "disabled")
+        self.botão2.configure(text=self.jogo.usuario, state= "disabled", font='Arial, 75')
         self.jogo.recebe_jogada(0,1)
-        self.label_ganhador.configure(text="Ganhador: {0}" .format(self.jogo.ganhador))
-        self.label_troca.configure(text="Agora é a vez de: {0}" .format(self.jogo.usuario))        
-        
+        self.ganhador.configure(text=" Vencedor: {0} " .format(self.jogo.ganhador))
+        self.troca.configure(text="Agora é a vez de: {0}" .format(self.jogo.usuario))        
         
     def click_botão3(self):
-        self.click()
-        self.botão3.configure(text=self.jogo.usuario, state= "disabled")
+        self.botão3.configure(text=self.jogo.usuario, state= "disabled", font='Arial, 75')
         self.jogo.recebe_jogada(0,2)
-        self.label_ganhador.configure(text="Ganhador: {0}" .format(self.jogo.ganhador))
-        self.label_troca.configure(text="Agora é a vez de: {0}" .format(self.jogo.usuario))          
+        self.ganhador.configure(text=" Vencedor: {0} " .format(self.jogo.ganhador))
+        self.troca.configure(text="Agora é a vez de: {0}" .format(self.jogo.usuario))          
          
-        
     def click_botão4(self):
-        self.click()
-        self.botão4.configure(text=self.jogo.usuario, state= "disabled")
+        self.botão4.configure(text=self.jogo.usuario, state= "disabled", font='Arial, 75')
         self.jogo.recebe_jogada(1,0)
-        self.label_ganhador.configure(text="Ganhador: {0}" .format(self.jogo.ganhador))
-        self.label_troca.configure(text="Agora é a vez de: {0}" .format(self.jogo.usuario))
+        self.ganhador.configure(text=" Vencedor: {0} " .format(self.jogo.ganhador))
+        self.troca.configure(text="Agora é a vez de: {0}" .format(self.jogo.usuario))
         
         
     def click_botão5(self):
-        self.click()
-        self.botão5.configure(text=self.jogo.usuario, state= "disabled")
+        self.botão5.configure(text=self.jogo.usuario, state= "disabled", font='Arial, 75')
         self.jogo.recebe_jogada(1,1)
-        self.label_ganhador.configure(text="Ganhador: {0}" .format(self.jogo.ganhador))
-        self.label_troca.configure(text="Agora é a vez de: {0}" .format(self.jogo.usuario))
-        
+        self.ganhador.configure(text=" Vencedor: {0} " .format(self.jogo.ganhador))
+        self.troca.configure(text="Agora é a vez de: {0}" .format(self.jogo.usuario))
         
     def click_botão6(self):
-        self.click()
-        self.botão6.configure(text=self.jogo.usuario, state= "disabled")
+        self.botão6.configure(text=self.jogo.usuario, state= "disabled", font='Arial, 75')
         self.jogo.recebe_jogada(1,2)
-        self.label_ganhador.configure(text="Ganhador: {0}" .format(self.jogo.ganhador))
-        self.label_troca.configure(text="Agora é a vez de: {0}" .format(self.jogo.usuario))
+        self.ganhador.configure(text=" Vencedor: {0} " .format(self.jogo.ganhador))
+        self.troca.configure(text="Agora é a vez de: {0}" .format(self.jogo.usuario))
             
-          
     def click_botão7(self):
-        self.click()
-        self.botão7.configure(text=self.jogo.usuario, state= "disabled")
+        self.botão7.configure(text=self.jogo.usuario, state= "disabled", font='Arial, 75')
         self.jogo.recebe_jogada(2,0)
-        self.label_ganhador.configure(text="Ganhador: {0}" .format(self.jogo.ganhador))
-        self.label_troca.configure(text="Agora é a vez de: {0}" .format(self.jogo.usuario))
-        
+        self.ganhador.configure(text=" Vencedor: {0} " .format(self.jogo.ganhador))
+        self.troca.configure(text="Agora é a vez de: {0}" .format(self.jogo.usuario))
         
     def click_botão8(self):
-        self.click()
-        self.botão8.configure(text=self.jogo.usuario, state= "disabled")
+        self.botão8.configure(text=self.jogo.usuario, state= "disabled", font='Arial, 75')
         self.jogo.recebe_jogada(2,1)
-        self.label_ganhador.configure(text="Ganhador: {0}" .format(self.jogo.ganhador))
-        self.label_troca.configure(text="Agora é a vez de: {0}" .format(self.jogo.usuario))
-       
-        
+        self.ganhador.configure(text=" Vencedor: {0} " .format(self.jogo.ganhador))
+        self.troca.configure(text="Agora é a vez de: {0}" .format(self.jogo.usuario))
+           
     def click_botão9(self):
-        self.click()
-        self.botão9.configure(text=self.jogo.usuario, state= "disabled")
+        self.botão9.configure(text=self.jogo.usuario, state= "disabled", font='Arial, 75')
         self.jogo.recebe_jogada(2,2)
-        self.label_ganhador.configure(text="Ganhador: {0}" .format(self.jogo.ganhador))
-        self.label_troca.configure(text="Agora é a vez de: {0}" .format(self.jogo.usuario))
-        
-        
+        self.ganhador.configure(text=" Vencedor: {0} " .format(self.jogo.ganhador))
+        self.troca.configure(text="Agora é a vez de: {0}" .format(self.jogo.usuario))      
+
+# Função que faz com que o jogo se inicie de novo. Esta função praticamente 
+# define novamente os botões, os labels e a matriz     
     def restart(self):
         self.jogo.limpa_jogadas()
         
         self.botão1 = tk.Button(self.window)
-        self.botão1.grid(row=1, column=0, sticky="nsew")
-        self.botão1.configure(command=self.click_botão1)
-         
         self.botão2 = tk.Button(self.window)
-        self.botão2.grid(row=1, column=1, sticky="nsew")
-        self.botão2.configure(command=self.click_botão2)
-          
         self.botão3 = tk.Button(self.window)
-        self.botão3.grid(row=1, column=2, sticky="nsew")
-        self.botão3.configure(command=self.click_botão3)
-     
         self.botão4 = tk.Button(self.window)
-        self.botão4.grid(row=2, column=0, sticky="nsew")
-        self.botão4.configure(command=self.click_botão4)
-         
         self.botão5 = tk.Button(self.window)
-        self.botão5.grid(row=2, column=1, sticky="nsew")
-        self.botão5.configure(command=self.click_botão5)
-          
         self.botão6 = tk.Button(self.window)
-        self.botão6.grid(row=2, column=2, sticky="nsew")
-        self.botão6.configure(command=self.click_botão6)
-       
         self.botão7 = tk.Button(self.window)
-        self.botão7.grid(row=3, column=0, sticky="nsew")
-        self.botão7.configure(command=self.click_botão7)
-         
         self.botão8 = tk.Button(self.window)
-        self.botão8.grid(row=3, column=1, sticky="nsew")
-        self.botão8.configure(command=self.click_botão8)
-          
         self.botão9 = tk.Button(self.window)
-        self.botão9.grid(row=3, column=2, sticky="nsew")
-        self.botão9.configure(command=self.click_botão9)
-     
-        self.label_troca = tk.Label(self.window)
-        self.label_troca.grid(row=0, column=0, columnspan=1, sticky="nsew")
-        self.label_troca.configure(text="Agora é a vez de: {0}" .format(self.jogo.usuario))
-                
         self.reiniciar = tk.Button(self.window)
-        self.reiniciar.grid(row=0, column=2,columnspan=1, sticky="nsew")
-        self.reiniciar.configure(text="Reiniciar",command=self.restart)
         
-        self.label_ganhador = tk.Label(self.window)
-        self.label_ganhador.grid(row=0, column=1, columnspan=1, sticky="nsew")
-        self.label_ganhador.configure(text="Ganhador: {0}" .format(self.jogo.ganhador))
+        self.botão1.grid(row=1, column=0, sticky="nsew")
+        self.botão2.grid(row=1, column=1, sticky="nsew")
+        self.botão3.grid(row=1, column=2, sticky="nsew")
+        self.botão4.grid(row=2, column=0, sticky="nsew")
+        self.botão5.grid(row=2, column=1, sticky="nsew")
+        self.botão6.grid(row=2, column=2, sticky="nsew")
+        self.botão7.grid(row=3, column=0, sticky="nsew")
+        self.botão8.grid(row=3, column=1, sticky="nsew")
+        self.botão9.grid(row=3, column=2, sticky="nsew")
+        self.reiniciar.grid(row=4, column=1,columnspan=1, sticky="nsew")
+        
+        self.botão1.configure(command=self.click_botão1) 
+        self.botão2.configure(command=self.click_botão2)
+        self.botão3.configure(command=self.click_botão3)
+        self.botão4.configure(command=self.click_botão4)
+        self.botão5.configure(command=self.click_botão5)
+        self.botão6.configure(command=self.click_botão6)
+        self.botão7.configure(command=self.click_botão7)
+        self.botão8.configure(command=self.click_botão8)
+        self.botão9.configure(command=self.click_botão9)
+        self.reiniciar.configure(text="Reiniciar",command=self.restart)
+     
+        self.troca = tk.Label(self.window)
+        self.ganhador = tk.Label(self.window)
+        
+        self.troca.grid(row=4, column=0, columnspan=1, sticky="nsew")
+        self.ganhador.grid(row=4, column=2, columnspan=1, sticky="nsew")
+        
+        self.troca.configure(text="Agora é a vez de: {0}" .format(self.jogo.usuario), bg='Black', fg='White')
+        self.ganhador.configure(text=" Vencedor: {0} " .format(self.jogo.ganhador), bg='Black', fg='White')
        
     def iniciar(self):
         self.window.mainloop()        
